@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { submissionStore } from '@/lib/store';
 import { mockAssignments } from '@/lib/mockData';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const studentId = 'student-1'; // In production, get from auth session
     const allSubmissions = submissionStore.getAllSubmissions();

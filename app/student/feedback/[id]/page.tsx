@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AssessmentObjective, AOFulfilmentCheck, Insight } from '@/types';
 import Link from 'next/link';
@@ -14,7 +14,6 @@ interface FeedbackData {
 
 export default function FeedbackPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [feedbackData, setFeedbackData] = useState<FeedbackData | null>(null);
 
   useEffect(() => {
@@ -49,7 +48,7 @@ export default function FeedbackPage() {
           </h1>
 
           <div className="space-y-8 mb-8">
-            {feedbackData.assessmentObjectives.map((ao, index) => (
+            {feedbackData.assessmentObjectives.map((ao) => (
               <div key={ao.id} className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold text-gray-800 dark:text-white">

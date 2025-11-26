@@ -10,6 +10,5 @@ const httpsAgent = process.env.NODE_ENV === 'development'
 
 export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
-  // @ts-ignore - httpAgent is not in the TypeScript definition but is supported
-  httpAgent: httpsAgent,
+  httpAgent: httpsAgent as never, // Cast to never to bypass TypeScript error
 });
