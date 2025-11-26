@@ -7,7 +7,8 @@ export default function Home() {
   // Clear all stored data only when browser is refreshed (not when navigating)
   useEffect(() => {
     // Check if page was loaded via refresh (not navigation)
-    const isPageRefresh = performance.getEntriesByType('navigation')[0]?.type === 'reload';
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    const isPageRefresh = navEntry?.type === 'reload';
 
     if (isPageRefresh) {
       fetch('/api/clear-data', { method: 'POST' })
