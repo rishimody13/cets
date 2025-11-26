@@ -4,11 +4,16 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
-  // Clear all stored data when landing on home page
+  // Clear all stored data only when browser is refreshed (not when navigating)
   useEffect(() => {
-    fetch('/api/clear-data', { method: 'POST' })
-      .then(() => console.log('Data cleared on page load'))
-      .catch(err => console.error('Failed to clear data:', err));
+    // Check if page was loaded via refresh (not navigation)
+    const isPageRefresh = performance.getEntriesByType('navigation')[0]?.type === 'reload';
+
+    if (isPageRefresh) {
+      fetch('/api/clear-data', { method: 'POST' })
+        .then(() => console.log('Data cleared on page refresh'))
+        .catch(err => console.error('Failed to clear data:', err));
+    }
   }, []);
 
   return (
