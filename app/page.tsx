@@ -1,8 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
+  // Clear all stored data when landing on home page
+  useEffect(() => {
+    fetch('/api/clear-data', { method: 'POST' })
+      .then(() => console.log('Data cleared on page load'))
+      .catch(err => console.error('Failed to clear data:', err));
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">
       <div className="text-center mb-12">

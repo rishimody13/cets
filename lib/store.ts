@@ -42,6 +42,10 @@ class SubmissionStore {
     });
     return all;
   }
+
+  clearAll() {
+    this.submissions.clear();
+  }
 }
 
 // Export a singleton instance
