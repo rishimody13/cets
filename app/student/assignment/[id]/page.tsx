@@ -87,17 +87,38 @@ export default function AssignmentPage() {
       if (response.ok) {
         const data = await response.json();
         if (data.keywords && data.keywords.length > 0) {
-          const newConcepts: ConceptBubble[] = data.keywords.map((keyword: string, index: number) => ({
-            id: `${Date.now()}-${index}`,
-            text: keyword,
-            x: Math.random() * 600,
-            y: Math.random() * 300
-          }));
           setConcepts(prev => {
-            // Avoid duplicates
-            const existingTexts = new Set(prev.map(c => c.text.toLowerCase()));
-            const uniqueNew = newConcepts.filter(c => !existingTexts.has(c.text.toLowerCase()));
-            return [...prev, ...uniqueNew];
+            // Create set of existing texts for duplicate checking (case-insensitive)
+            const existingTexts = new Set(prev.map(c => c.text.toLowerCase().trim()));
+
+            // Filter out duplicates and create new concepts with better positioning
+            const uniqueKeywords = data.keywords.filter((keyword: string) =>
+              !existingTexts.has(keyword.toLowerCase().trim())
+            );
+
+            // Generate new concept bubbles with spread-out random positions
+            const newConcepts: ConceptBubble[] = uniqueKeywords.map((keyword: string, index: number) => {
+              // Calculate available space accounting for bubble size (~120px width, ~60px height)
+              const maxX = 750; // Approximate container width minus bubble width
+              const maxY = 320; // Container height (384px) minus bubble height
+
+              // Add some offset to avoid clustering in the same spot
+              const baseX = (index % 3) * 250; // Distribute across 3 columns
+              const baseY = Math.floor(index / 3) * 80; // Stack in rows
+
+              // Add random offset for natural distribution
+              const randomX = Math.random() * 150;
+              const randomY = Math.random() * 60;
+
+              return {
+                id: `${Date.now()}-${index}`,
+                text: keyword,
+                x: Math.min(baseX + randomX, maxX),
+                y: Math.min(baseY + randomY, maxY)
+              };
+            });
+
+            return [...prev, ...newConcepts];
           });
         }
       }
