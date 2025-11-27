@@ -4,17 +4,18 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
-  // Clear all stored data only when browser is refreshed (not when navigating)
+  // Disabled auto-clear to preserve submissions
+  // Users can manually refresh to clear data if needed
   useEffect(() => {
-    // Check if page was loaded via refresh (not navigation)
-    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-    const isPageRefresh = navEntry?.type === 'reload';
-
-    if (isPageRefresh) {
-      fetch('/api/clear-data', { method: 'POST' })
-        .then(() => console.log('Data cleared on page refresh'))
-        .catch(err => console.error('Failed to clear data:', err));
-    }
+    // Commented out auto-clear functionality
+    // const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    // const isPageRefresh = navEntry?.type === 'reload';
+    //
+    // if (isPageRefresh) {
+    //   fetch('/api/clear-data', { method: 'POST' })
+    //     .then(() => console.log('Data cleared on page refresh'))
+    //     .catch(err => console.error('Failed to clear data:', err));
+    // }
   }, []);
 
   return (
