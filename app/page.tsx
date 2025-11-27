@@ -21,7 +21,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-4">
-          AI Assessment Platform
+          Voce AI Assessment Platform
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-300">
           Select your role to continue
