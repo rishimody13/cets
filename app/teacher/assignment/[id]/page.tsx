@@ -73,9 +73,14 @@ export default function TeacherAssignmentView() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            {assignment.subject}: Student Submissions
-          </h1>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+              {assignment.subject}: Student Submissions
+            </h1>
+            <p className="text-lg text-green-600 dark:text-green-400 font-medium mt-1">
+              {assignment.subTopic}
+            </p>
+          </div>
           <Link href="/teacher/dashboard">
             <button className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200">
               Back to Dashboard

@@ -17,9 +17,14 @@ export default function AssignmentCard({ assignment, userType }: AssignmentCardP
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-200 dark:border-gray-700">
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
-            {assignment.subject}
-          </h3>
+          <div>
+            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+              {assignment.subject}
+            </h3>
+            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mt-1">
+              {assignment.subTopic}
+            </p>
+          </div>
           {assignment.status && (
             <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
               assignment.status === 'completed'
@@ -32,7 +37,7 @@ export default function AssignmentCard({ assignment, userType }: AssignmentCardP
             </span>
           )}
         </div>
-        <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+        <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed mt-3">
           {assignment.question}
         </p>
       </div>

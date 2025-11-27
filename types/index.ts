@@ -1,8 +1,10 @@
 export interface Assignment {
   id: string;
   subject: string;
+  subTopic: string;
   question: string;
   createdAt: string;
+  visibleToStudents: boolean;
   studentId?: string;
   status?: 'pending' | 'in-progress' | 'completed';
 }

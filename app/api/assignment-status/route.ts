@@ -7,8 +7,13 @@ export async function GET() {
     const studentId = 'student-1'; // In production, get from auth session
     const allSubmissions = submissionStore.getAllSubmissions();
 
+    // Filter to show only assignments visible to students
+    const visibleAssignments = mockAssignments.filter(
+      assignment => assignment.visibleToStudents
+    );
+
     // Create a map of assignment statuses
-    const statusMap = mockAssignments.map(assignment => {
+    const statusMap = visibleAssignments.map(assignment => {
       const submission = allSubmissions.find(
         s => s.assignmentId === assignment.id && s.studentId === studentId
       );
