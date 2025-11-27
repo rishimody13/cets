@@ -5,6 +5,7 @@ export interface Assignment {
   question: string;
   createdAt: string;
   visibleToStudents: boolean;
+  isPractice: boolean;
   studentId?: string;
   status?: 'pending' | 'in-progress' | 'completed';
 }

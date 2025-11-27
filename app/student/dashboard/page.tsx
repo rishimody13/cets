@@ -8,6 +8,7 @@ import Link from 'next/link';
 export default function StudentDashboard() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showPractice, setShowPractice] = useState(false);
 
   useEffect(() => {
     const fetchAssignments = async () => {
@@ -26,6 +27,9 @@ export default function StudentDashboard() {
 
     fetchAssignments();
   }, []);
+
+  const mainAssignments = assignments.filter(a => !a.isPractice);
+  const practiceAssignments = assignments.filter(a => a.isPractice);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">
@@ -52,15 +56,41 @@ export default function StudentDashboard() {
             <p className="text-xl">Loading assignments...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {assignments.map((assignment) => (
-              <AssignmentCard
-                key={assignment.id}
-                assignment={assignment}
-                userType="student"
-              />
-            ))}
-          </div>
+          <>
+            {/* Main Assignments */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+              {mainAssignments.map((assignment) => (
+                <AssignmentCard
+                  key={assignment.id}
+                  assignment={assignment}
+                  userType="student"
+                />
+              ))}
+            </div>
+
+            {/* Practice Questions Toggle Button */}
+            <div className="flex justify-center mb-6">
+              <button
+                onClick={() => setShowPractice(!showPractice)}
+                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold rounded-lg transition-colors duration-200 shadow-lg"
+              >
+                {showPractice ? 'Hide Practice Questions' : 'Practice Questions'}
+              </button>
+            </div>
+
+            {/* Practice Assignments */}
+            {showPractice && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                {practiceAssignments.map((assignment) => (
+                  <AssignmentCard
+                    key={assignment.id}
+                    assignment={assignment}
+                    userType="student"
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
