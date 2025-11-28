@@ -325,40 +325,58 @@ Provide your assessment in the JSON format specified above. Be constructive and 
     const content = message.content[0];
     if (content.type === 'text') {
       try {
+        console.log('Raw Claude response:', content.text.substring(0, 500)); // Log first 500 chars
+
         // Try to extract JSON from the response
         const jsonMatch = content.text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          // Clean up the JSON string - remove any trailing commas, fix quotes
-          let jsonStr = jsonMatch[0];
-
-          // Remove trailing commas before closing braces/brackets
-          jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1');
-
-          const feedbackData = JSON.parse(jsonStr);
-
-          // Save the submission
-          const conceptBubbles = concepts.map((text: string, index: number) => ({
-            id: `${Date.now()}-${index}`,
-            text,
-            x: 0,
-            y: 0
-          }));
-
-          submissionStore.addSubmission({
-            id: `${assignmentId}-${studentId}-${Date.now()}`,
-            assignmentId,
-            studentId,
-            transcript,
-            conceptMap: conceptBubbles,
-            assessmentObjectives: feedbackData.assessmentObjectives,
-            overallFeedback: feedbackData.overallFeedback,
-            aoFulfilmentCheck: feedbackData.aoFulfilmentCheck,
-            insights: feedbackData.insights,
-            submittedAt: new Date().toISOString()
-          });
-
-          return NextResponse.json(feedbackData);
+        if (!jsonMatch) {
+          console.error('No JSON found in response');
+          throw new Error('No JSON found in Claude response');
         }
+
+        // Clean up the JSON string - remove any trailing commas, fix quotes
+        let jsonStr = jsonMatch[0];
+
+        // Remove trailing commas before closing braces/brackets
+        jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1');
+
+        // Escape unescaped newlines and other control characters in string values
+        // This regex finds string values and escapes control characters within them
+        jsonStr = jsonStr.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, (match, p1) => {
+          // Escape newlines, tabs, and carriage returns that aren't already escaped
+          const escaped = p1
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r')
+            .replace(/\t/g, '\\t');
+          return `"${escaped}"`;
+        });
+
+        console.log('Attempting to parse JSON...');
+        const feedbackData = JSON.parse(jsonStr);
+        console.log('Successfully parsed feedback data');
+
+        // Save the submission
+        const conceptBubbles = concepts.map((text: string, index: number) => ({
+          id: `${Date.now()}-${index}`,
+          text,
+          x: 0,
+          y: 0
+        }));
+
+        submissionStore.addSubmission({
+          id: `${assignmentId}-${studentId}-${Date.now()}`,
+          assignmentId,
+          studentId,
+          transcript,
+          conceptMap: conceptBubbles,
+          assessmentObjectives: feedbackData.assessmentObjectives,
+          overallFeedback: feedbackData.overallFeedback,
+          aoFulfilmentCheck: feedbackData.aoFulfilmentCheck,
+          insights: feedbackData.insights,
+          submittedAt: new Date().toISOString()
+        });
+
+        return NextResponse.json(feedbackData);
       } catch (parseError) {
         console.error('JSON parsing error:', parseError);
         console.error('Raw response:', content.text);
